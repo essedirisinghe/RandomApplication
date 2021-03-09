@@ -37,20 +37,19 @@ main (int argc, char *argv[])
   
   InetSocketAddress sinkSocket (interfaces.GetAddress (0), 9);
   sinkSocket.SetTos (0xc0);
-  
-    
+      
   PacketSinkHelper packetSinkHelper ("ns3::UdpSocketFactory", sinkSocket);
   sinkApplications.Add (packetSinkHelper.Install (nodes.Get (0)));
   
-  RandomHelper onOffHelperHigh  ("ns3::UdpSocketFactory", sinkSocket);
-  //onOffHelperHigh.SetAttribute ("Interval", StringValue   ("ns3::UniformRandomVariable[Min=0.001|Max=0.01]"));
-  onOffHelperHigh.SetAttribute ("PacketSize", StringValue  ("ns3::UniformRandomVariable[Min=500|Max=1000]"));
-  //onOffHelperHigh.SetAttribute ("PacketSize", StringValue  ("ns3::NormalRandomVariable[Mean=500|Variance=300]"));
-  //onOffHelperHigh.SetAttribute ("PacketSize", StringValue  ("ns3::ConstantRandomVariable[Constant=500]"));
-  onOffHelperHigh.SetAttribute ("Interval", StringValue   ("ns3::ConstantRandomVariable[Constant=0.1]"));
-  onOffHelperHigh.SetAttribute ("MaxBytes", UintegerValue (0));
+  RandomHelper randomPacketGenerator  ("ns3::UdpSocketFactory", sinkSocket);
+  //randomPacketGenerator.SetAttribute ("Interval", StringValue   ("ns3::UniformRandomVariable[Min=0.001|Max=0.01]"));
+  randomPacketGenerator.SetAttribute ("PacketSize", StringValue  ("ns3::UniformRandomVariable[Min=500|Max=1000]"));
+  //randomPacketGenerator.SetAttribute ("PacketSize", StringValue  ("ns3::NormalRandomVariable[Mean=500|Variance=300]"));
+  //randomPacketGenerator.SetAttribute ("PacketSize", StringValue  ("ns3::ConstantRandomVariable[Constant=500]"));
+  randomPacketGenerator.SetAttribute ("Interval", StringValue   ("ns3::ConstantRandomVariable[Constant=0.1]"));
+  randomPacketGenerator.SetAttribute ("MaxBytes", UintegerValue (0));
   
-  sourceApplications.Add (onOffHelperHigh.Install (nodes.Get (1))); 
+  sourceApplications.Add (randomPacketGenerator.Install (nodes.Get (1))); 
 
   Simulator::Stop (Seconds (60));
   Simulator::Run ();
